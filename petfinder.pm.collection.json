@@ -175,7 +175,31 @@
 					"response": []
 				},
 				{
-					"name": "Get a single animal",
+					"name": "Get an animal by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify valid parameters\", function(){",
+									"    const idParameter = pm.collectionVariables.get('id')",
+									"    pm.expect(idParameter).to.be.a(\"number\")",
+									"})",
+									"",
+									"pm.test(\"Verify response value type\", function() {",
+									"    pm.expect(jsonData).to.be.an(\"object\")",
+									"});",
+									"",
+									"pm.test(\"Matching animal returned\", function(){",
+									"    pm.expect(jsonData.animal.id).to.eql(pm.collectionVariables.get('id'))",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -193,7 +217,34 @@
 					"response": []
 				},
 				{
-					"name": "Get animals by location",
+					"name": "Get animals by location - City State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const animalsArray = jsonData.animals;",
+									"",
+									"pm.test(\"Distance property less than 100 miles from location\", function(){",
+									"    animalsArray.forEach((elem)=>{",
+									"        pm.expect(elem.distance).to.be.lessThan(100)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -216,12 +267,87 @@
 					"response": []
 				},
 				{
-					"name": "Get animals by distance",
+					"name": "Get animals by location - Post Code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const animalsArray = jsonData.animals;",
+									"",
+									"pm.test(\"Distance property less than 100 miles from location\", function(){",
+									"    animalsArray.forEach((elem)=>{",
+									"        pm.expect(elem.distance).to.be.lessThan(100)",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/animals?location=denver, colorado&distance=300",
+							"raw": "{{baseUrl}}/animals?location=33076",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"animals"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "33076"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get animals by distance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const animalsArray = jsonData.animals;",
+									"",
+									"function actualDistanceParameter(){",
+									"    const jsonUrl = pm.request.url.toJSON()",
+									"    const getDistance = jsonUrl.query.find(e => e.key === 'distance')",
+									"    return parseInt(getDistance.value)",
+									"}",
+									"",
+									"pm.test(\"Distance property less than 300 miles from location\", function(){",
+									"    //pm.expect(actualDistanceParameter()).to.eql(300)",
+									"    animalsArray.forEach((elem)=>{",
+									"        pm.expect(elem.distance).to.be.lessThan(actualDistanceParameter())",
+									"    })",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/animals?location=denver, colorado&distance=300&sort=-distance",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -236,6 +362,10 @@
 								{
 									"key": "distance",
 									"value": "300"
+								},
+								{
+									"key": "sort",
+									"value": "-distance"
 								}
 							]
 						}
@@ -270,7 +400,11 @@
 						"exec": [
 							"pm.test(\"Successful status code 200\", function () {",
 							"    pm.response.to.have.status(200);",
-							"})"
+							"})",
+							"",
+							"pm.test(\"Response time is less than 2 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});"
 						]
 					}
 				}
@@ -583,6 +717,409 @@
 									"    const responseTitle = jsonData.title;",
 									"    pm.expect(responseTitle).to.eql(\"Not Found\")",
 									"})"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Get an animal",
+					"item": [
+						{
+							"name": "404 - Animal by Invalid ID",
+							"item": [
+								{
+									"name": "Animal ID as string",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status code is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});",
+													"",
+													"pm.test(\"Not found response\", function(){",
+													"    const responseTitle = jsonData.title;",
+													"    const responseDetail = jsonData.detail;",
+													"    pm.expect(responseTitle).to.eql(\"Not Found\");",
+													"    pm.expect(responseDetail).to.eql(\"Not Found\");",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals/abcdefg",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals",
+												"abcdefg"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Animal ID not in db",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Status code is 404\", function () {",
+													"    pm.response.to.have.status(404);",
+													"});",
+													"",
+													"pm.test(\"Not found response\", function(){",
+													"    const responseTitle = jsonData.title;",
+													"    const responseDetail = jsonData.detail;",
+													"    pm.expect(responseTitle).to.eql(\"Not Found\");",
+													"    pm.expect(responseDetail).to.eql(\"Not Found\");",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals/11111111",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals",
+												"11111111"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Animal ID with characters",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//this endpoint should return 404, however, it returns 200 OK"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals/65289840!",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals",
+												"65289840!"
+											]
+										},
+										"description": "This endpoint should return a 404 due to the special character at the end, however, it returns a 200 OK status code."
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "400 - Invalid Query Parameters",
+							"item": [
+								{
+									"name": "Animal location missing state",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Validate invalid params messaging\", function(){",
+													"    pm.expect(jsonData['invalid-params'][0].path).to.eql(\"location\")",
+													"    pm.expect(jsonData['invalid-params'][0].message).to.eql(\"Could not determine location.\")",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals?location=denver",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals"
+											],
+											"query": [
+												{
+													"key": "location",
+													"value": "denver"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Animal location invalid chars",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Validate invalid params messaging\", function(){",
+													"    pm.expect(jsonData['invalid-params'][0].path).to.eql(\"location\")",
+													"    pm.expect(jsonData['invalid-params'][0].message).to.eql(\"Could not determine location.\")",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals?location=washington*",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals"
+											],
+											"query": [
+												{
+													"key": "location",
+													"value": "washington*"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Animal location zip special chars",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Validate invalid params messaging\", function(){",
+													"    pm.expect(jsonData['invalid-params'][0].path).to.eql(\"location\")",
+													"    pm.expect(jsonData['invalid-params'][0].message).to.eql(\"Could not determine location.\")",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals?location=34787!",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals"
+											],
+											"query": [
+												{
+													"key": "location",
+													"value": "34787!"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Animal distance string",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const jsonData = pm.response.json();",
+													"",
+													"pm.test(\"Validate invalid params messaging\", function(){",
+													"    pm.expect(jsonData['invalid-params'][0].path).to.eql(\"distance\")",
+													"    pm.expect(jsonData['invalid-params'][0].message).to.eql(\"This value should be a valid number.\")",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals?location=34787&distance=twenty",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals"
+											],
+											"query": [
+												{
+													"key": "location",
+													"value": "34787"
+												},
+												{
+													"key": "distance",
+													"value": "twenty"
+												}
+											]
+										},
+										"description": "Noted: Should return one invalid-param object in the response, but returns two"
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"pm.test(\"Correct response message\", function () {",
+											"    pm.expect(jsonData.detail).to.eql(\"The request contains invalid parameters.\")",
+											"    pm.expect(jsonData['invalid-params'][0].in).to.eql(\"query\")",
+											"});",
+											"",
+											"pm.test(\"Correct RFC 7807 error type code\", function(){",
+											"    pm.expect(jsonData.type).to.include(\"ERR-00002\")",
+											"})"
+										]
+									}
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
 								]
 							}
 						}
