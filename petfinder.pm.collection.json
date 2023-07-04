@@ -1,0 +1,655 @@
+{
+	"info": {
+		"_postman_id": "d15aae04-5f9b-4a73-87a1-f01f28f0a116",
+		"name": "Petfinder",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26568105"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "getToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const access_token = jsonData.access_token;",
+									"pm.globals.set(\"access_token\",access_token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{pf_key}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{pf_secret}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/oauth2/token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful status code 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"})"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Happy Path",
+			"item": [
+				{
+					"name": "Get all animals",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const animalsArray = jsonData.animals;",
+									"const animalId = animalsArray.first().id;",
+									"pm.collectionVariables.set('id', animalId)",
+									"",
+									"pm.test(\"Returns correct default number of results\", function(){",
+									"    pm.expect(jsonData.pagination.count_per_page).to.eql(animalsArray.length)",
+									"})",
+									"",
+									"pm.test('Response type verification', ()=>{",
+									"    const animalObject = animalsArray.first()",
+									"    pm.expect(animalObject).to.be.an(\"object\")",
+									"})",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/animals",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"animals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all animal types",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const allTypes = pm.response.json().types;",
+									"const actualTypes = []",
+									"const expectedTypes = [\"Dog\", \"Cat\", \"Rabbit\", \"Small & Furry\", \"Horse\", \"Bird\", \"Scales, Fins & Other\", \"Barnyard\"]",
+									"",
+									"pm.test(\"Returns all animal types\", function(){",
+									"    allTypes.map((element)=>{",
+									"        const typeName= element.name",
+									"        actualTypes.push(typeName)",
+									"    })",
+									"    pm.expect(actualTypes).to.eql(expectedTypes)",
+									"})",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/types",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"types"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single animal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/animals/{{id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"animals",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get animals by location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/animals?location=denver, colorado",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"animals"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "denver, colorado"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get animals by distance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/animals?location=denver, colorado&distance=300",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"animals"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "denver, colorado"
+								},
+								{
+									"key": "distance",
+									"value": "300"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful status code 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"})"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Sad Path",
+			"item": [
+				{
+					"name": "401 - Invalid Auth",
+					"item": [
+						{
+							"name": "Invalid Token",
+							"item": [
+								{
+									"name": "Invalid Token - Animals",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "abc123",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/animals",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"animals"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Invalid Token - Types",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "abc---123",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/types/",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"types",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Missing Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/animals",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"animals"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid Auth Type",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "abc123",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "stephaniejf",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/animals",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"animals"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"})",
+									"",
+									"pm.test(\"Invalid token message\", function(){",
+									"    const statusDetail = jsonData.detail;",
+									"    pm.expect(statusDetail).to.be.eql(\"Access token invalid or expired\")",
+									"})"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "404 - Invalid Endpoint",
+					"item": [
+						{
+							"name": "Invalid Endpoint - Animals",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"",
+											"pm.test(\"No route message\", function(){",
+											"    const statusDetail = jsonData.detail;",
+											"    pm.expect(statusDetail).to.contain(\"No route found for\")",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableUrlEncoding": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/animal",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"animal"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid Endpoint - Types",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const jsonData = pm.response.json();",
+											"",
+											"pm.test(\"Not found detail\", function(){",
+											"    const statusDetail = jsonData.detail;",
+											"    pm.expect(statusDetail).to.contain(\"Not Found\")",
+											"})",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/animals/types",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"animals",
+										"types"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{access_token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Status code 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"})",
+									"",
+									"pm.test(\"Not found response title\", function(){",
+									"    const responseTitle = jsonData.title;",
+									"    pm.expect(responseTitle).to.eql(\"Not Found\")",
+									"})"
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessTokenUrl",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "client_credentials",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.petfinder.com/v2",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": ""
+		}
+	]
+}
