@@ -23,8 +23,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Create dir
-        run: |
-          mkdir Artifacts
+        run: mkdir Artifacts
 
       # Install Node
       - uses: actions/checkout@v3
@@ -42,7 +41,7 @@ jobs:
       # Run the collection
       - name: Run collection
         run: |
-          newman run "petfinder.pm.collection.json" --global-var "pf_key=${{ secrets.PFKEY }}" --global-var "pf_secret=${{ secrets.PFSECRET }}" --global-var "access_token=${{ secrets.PFTOKEN }}" -r htmlextra --reporter-htmlextra-skipSensitiveData -export Artifacts/report.html
+          newman run "petfinder.pm.collection.json" --global-var "pf_key=${{ secrets.PFKEY }}" --global-var "pf_secret=${{ secrets.PFSECRET }}" --global-var "access_token=${{ secrets.PFTOKEN }}" -r htmlextra --reporter-htmlextra-skipSensitiveData-export Artifacts/report.html
 
       # Publish the report
       - name: Publish report
