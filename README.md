@@ -1,7 +1,10 @@
 **WIP**
-# Testing of the Petfinder.com RESTful API with CI using GitHub Actions
+# RESTful API testing with CI using GitHub Actions
 
-A Postman collection created to test the [Petfinder.com](https://www.petfinder.com) RESTful API. This project was created to practice using the Postman GUI for API testing and authentication methods, as well as exporting and automating the collection to run with the Newman CLI, and generating HTML reports of test outcomes via the Newman Reporter npm package in a continuous integration fashion with GitHub Actions.
+A Postman collection created to test the [Petfinder.com](https://www.petfinder.com) RESTful API.  
+
+
+This project was created to practice using the Postman GUI for API testing and authentication methods, as well as exporting and automating the collection to run with the Newman CLI, and generating HTML reports of test outcomes via the Newman Reporter in a continuous integration fashion with GitHub Actions.
 
 ## Overview
 
