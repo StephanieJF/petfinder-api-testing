@@ -41,7 +41,7 @@ jobs:
       # Run the collection
       - name: Run collection
         run: |
-          newman run "petfinder.pm.collection.json" --global-var "pf_key=${{ secrets.PFKEY }}" --global-var "pf_secret=${{ secrets.PFSECRET }}" --global-var "access_token=${{ secrets.PFTOKEN }}" -r htmlextra --reporter-htmlextra-export Artifacts/report.html
+          newman run "petfinder.pm.collection.json" --global-var "pf_key=${{ secrets.PFKEY }}" --global-var "pf_secret=${{ secrets.PFSECRET }}" --global-var "access_token=${{ secrets.PFTOKEN }}" -r htmlextra --reporter-htmlextra-skipSensitiveData --reporter-htmlextra-export Artifacts/report.html
 
       # Publish the report
       - name: Publish report
