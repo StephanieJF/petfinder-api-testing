@@ -34,3 +34,22 @@ Project Highlights:
     <ul><li>Returned successful status code of <code>200</code></li></ul>
 
 </details>
+
+<details>
+    <summary>Happy Path API Requests</summary>
+      <br>
+      <p>Base Call: <code>GET https://api.petfinder.com/v2</code> </p>
+  
+  <ul><li><details>
+        <summary><code>GET /animals</code></summary>
+        <p>Returns one "page" of animals (default of 20 animals per page)</p>
+        <p>Expected Results</p>
+        <ul><li>Returned successful status code of <code>200</code></li>
+          <li>Response time is less than 2 seconds</li>
+          <li>Returns one page with default number of animals (20)</li>
+          <li>Returns an array of objects</li>
+      </ul>
+  </details></li></ul>
+  </details>
+  
+
