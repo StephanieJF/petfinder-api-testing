@@ -42,12 +42,33 @@ Project Highlights:
   
   <ul><li><details>
         <summary><code>GET /animals</code></summary>
-        <p>Returns one "page" of animals (default of 20 animals per page)</p>
+        <p><em>Returns one "page" of animals (default of 20 animals per page)</em></p>
         <p>Expected Results</p>
         <ul><li>Returned successful status code of <code>200</code></li>
           <li>Response time is less than 2 seconds</li>
-          <li>Returns one page with default number of animals (20)</li>
-          <li>Returns an array of objects</li>
+          <li>Returns one page with the default number of animals (20)</li>
+          <li>Returns a JSON object containing an <code>"animals"</code> array of objects</li>
+      </ul>
+  </details></li></ul>
+  
+  <ul><li><details>
+        <summary><code>GET /types</code></summary>
+        <p><em>Returns an array with every animal type</em></p>
+        <p>Expected Results</p>
+        <ul><li>Returned successful status code of <code>200</code></li>
+          <li>Response time is less than 2 seconds</li>
+          <li>Response includes every animal type in the database</li>
+      </ul>
+  </details></li></ul>
+
+  <ul><li><details>
+        <summary><code>GET /animals/{id}</code></summary>
+        <p><em>Returns details on a specific animal based on an integer ID</em></p>
+        <p>Expected Results</p>
+        <ul><li>Returned successful status code of <code>200</code></li>
+          <li>Response time is less than 2 seconds</li>
+          <li>Response contains an object</li>
+          <li>Animal returned has an ID that matches the ID sent in the request</li>
       </ul>
   </details></li></ul>
   </details>
