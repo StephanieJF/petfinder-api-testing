@@ -102,5 +102,27 @@ Project Highlights:
       </ul>
   </details></li></ul>
   </details>
+
+<details>
+  <summary>Sad Path API Requests</summary>
+    <br>
+    
+  <ul><li><details>
+          <summary><code>401</code> Invalid Auth</summary>
+    </br>
+        <p>Scenarios Tested:</p>
+            <ul>
+                <li>No Access Token</li>
+                <li>Invalid Auth Type (Basic auth with username and pw)</li>
+                <li>Incorrect Token Input</li>
+            </ul>
+    </br>
+        <p>Expected Results:</p>
+            <ul>
+                <li>Returned status code of <code>401</code></li>
+                <li>Response message <code>"Access token invalid or expired"</code></li>
+            </ul>
+    </details></li></ul>
+</details>
   
 
