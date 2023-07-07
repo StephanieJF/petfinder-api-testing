@@ -49,6 +49,34 @@ Project Highlights:
           <li>Returns one page with the default number of animals (20)</li>
           <li>Returns a JSON object containing an <code>"animals"</code> array of objects</li>
       </ul>
+  <hr>
+        <p>Query parameters: Location</p>
+        <ul>
+          <li>By City, State: <code>GET /animals?location={city}, {state}</code></li>
+          <li>By Postal Code: <code>GET /animals?location={postal_code}</code></li>
+        <ul><li>Expected Results:</li>
+          <ul>
+            <li>Accepts a string parameter</li>
+            <li>Returned successful status code of <code>200</code></li>
+                <li>Response time is less than 2 seconds</li>
+                <li>Animals returned have distance property value less than the default 100 miles</li>
+            </ul>
+            </ul>
+        </ul>
+  </br>
+      <p>Query parameters: Distance</p>
+    <ul>
+      <li>By Miles: <code>/animals?location={postal_code}&distance={miles}</code></li>
+        <ul>
+          <li>Expected Results:</li>
+            <ul>
+              <li>Accepts an integer, max: 500</li>
+              <li>Returned successful status code of <code>200</code></li>
+              <li>Response time is less than 2 seconds</li>
+              <li>Animals returned have distance property value less than miles parameter</li>
+            </ul>
+        </ul>
+    </ul>
   </details></li></ul>
   
   <ul><li><details>
@@ -65,7 +93,9 @@ Project Highlights:
         <summary><code>GET /animals/{id}</code></summary>
         <p><em>Returns details on a specific animal based on an integer ID</em></p>
         <p>Expected Results</p>
-        <ul><li>Returned successful status code of <code>200</code></li>
+        <ul><li>Accepts an integer</li>
+          <li>Only succeeds if there is an ID match in the database</li>
+          <li>Returned successful status code of <code>200</code></li>
           <li>Response time is less than 2 seconds</li>
           <li>Response contains an object</li>
           <li>Animal returned has an ID that matches the ID sent in the request</li>
