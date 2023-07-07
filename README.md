@@ -23,3 +23,14 @@ Project Highlights:
 
 
 ## Test Details
+<details>
+  <summary>Authentication</summary>
+    <br>
+    <p>Test Steps</p>
+    <ol><li>Send a request for an access token, passing in encrypted variables for <code>client_id</code> and <code>client_secret</code></li>
+        <li>Capture the access token from the response body and store in an encrypted variable to be included in the header for subsequent requests</li>
+    </ol>
+    <p>Expected Results</p>
+    <ul><li>Returned successful status code of <code>200</code></li></ul>
+
+</details>
