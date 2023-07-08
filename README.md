@@ -49,8 +49,8 @@ This project was created to practice using the Postman GUI for API testing and a
         <ul>
         <li>Invalid authorization
             <ul>
-            <li>Incorrect token passed to <code>/animals</code></li>
-            <li>Incorrect token passed to <code>/types</code></li>
+            <li>Invalid token passed to <code>/animals</code></li>
+            <li>Invalid token passed to <code>/types</code></li>
             <li>Missing token</li>
             <li>Incorrect authorization type</li>
             </ul>
@@ -98,10 +98,12 @@ POST /oauth2/token
 ```
 
 <strong>Steps</strong>
+
 <ol><li>Send a request for an access token, passing in encrypted variables for <code>client_id</code> and <code>client_secret</code></li>
 <li>Capture the access token from the response body and store in an encrypted variable to be included in the header to authorize subsequent requests</li></ol>
 
 <strong>Expected Results</strong>
+
 <ul><li>Returned successful status code of <code>200</code></li></ul>
 
 </details>
@@ -210,4 +212,78 @@ GET /animals/{id}
 
 <details>
     <summary>Sad Path API Requests</summary>
+        
+### Invalid token passed to `/animals`
+<p><em>Attempts to make a request with an invalid token</em></p>
+
+```http
+GET /animals
+```
+
+```http
+header: 'Authorization: Bearer abc123'
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns message with <code>"Access token invalid or expired"</code></li>
+</ul>
+
+---
+
+### Invalid token passed to `/types`
+
+<p><em>Attempts to make a request with an invalid token</em></p>
+
+```http
+GET /types
+```
+
+```http
+header: 'Authorization: Bearer abc---123'
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns message with <code>"Access token invalid or expired"</code></li>
+</ul>
+
+---
+
+### Missing token
+
+<p><em>Attempts to make a request without a token</em></p>
+
+```http
+GET /animals
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns message with <code>"Access token invalid or expired"</code></li>
+</ul>
+
+---
+
+### Incorrect authorization type
+
+<p><em>Attempts to make a request using Basic Auth and passing a Username and Password</em></p>
+
+```http
+GET /animals
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns message with <code>"Access token invalid or expired"</code></li>
+</ul>
+
 </details>
