@@ -1,28 +1,91 @@
 **WIP**
+
 # RESTful API testing with CI using GitHub Actions
 
-A Postman collection created to test the [Petfinder.com](https://www.petfinder.com) RESTful API.  
-
+A Postman collection created to test the [Petfinder.com](https://www.petfinder.com) RESTful API.
 
 This project was created to practice using the Postman GUI for API testing and authentication methods, as well as exporting and automating the collection to run with the Newman CLI, and generating HTML reports of test outcomes via the Newman Reporter in a continuous integration fashion with GitHub Actions.
 
 ## Overview
 
-Links:
+#### Project Highlights:
+
+- Authentication using OAuth 2.0
+- Automated continuous integration (CI) set to run the test collection with Newman any time an update is made to the `main` repository branch via GitHub Actions
+- Generates an HTML report of the test outcomes at runtime and exports the report to a folder called Artifacts
+
+#### Links:
 
 - [Petfinder API Documentation](https://www.petfinder.com/developers/v2/docs/)
 - [Newman Runner](https://www.npmjs.com/package/newman)
 - [Newman Reporter](https://www.npmjs.com/package/newman-reporter-htmlextra)
 
-Project Highlights:
+## Collection Structure
 
-- Authentication using OAuth 2.0
-- Automated continuous integration (CI) set to run the test collection with Newman any time an update is made to the `main` repository branch via GitHub Actions
-- Generates an HTML report of the test outcomes at runtime and exports the report to a folder called Artifacts   
-
-
+<ul>
+    <li>Authentication
+    <ul>
+        <li>Get token</li>
+    </ul>
+</li>
+    <li>Happy paths
+    <ul>
+        <li>Get all animals
+        <ul>
+        <li>Get animals by location
+            <ul>
+            <li>City, state</li>
+            <li>Postal code</li>
+            </ul>
+        </li>
+        <li>Get animals by distance from location</li>
+        </ul>
+        </li>
+        <li>Get all animal types</li>
+        <li>Get animal by ID</li>
+    </ul>
+    </li>
+    <li>Sad paths
+        <ul>
+        <li>Invalid authorization
+            <ul>
+            <li>Incorrect token passed to <code>/animals</code></li>
+            <li>Incorrect token passed to <code>/types</code></li>
+            <li>Missing token</li>
+            <li>Incorrect authorization type</li>
+            </ul>
+        </li>
+        <li>Invalid endpoint
+            <ul>
+            <li>Invalid endpoint <code>/animal</code></li>
+            <li>Invalid endpoint <code>/animals/types</code></li>
+            </ul>
+        </li>
+        <li>Invalid parameters
+            <ul>
+            <li>Invalid IDs for get animal by ID
+            <ul>
+                <li>ID as a string</li>
+                <li>ID with no database match</li>
+                <li>ID with special characters</li>
+            </ul>
+            </li>
+            <li>Invalid query parameters for location and distance
+            <ul>
+                <li>Location by city with empty state</li>
+                <li>Location by state with special characters</li>
+                <li>Location by postal code with special characters</li>
+                <li>Distance parameter as a string</li>
+            </ul>
+            </li>
+            </ul>
+        </li>
+        </ul>
+    </li>
+</ul>
 
 ## Test Details
+
 <details>
   <summary>Authentication</summary>
     <br>
@@ -124,5 +187,3 @@ Project Highlights:
             </ul>
     </details></li></ul>
 </details>
-  
-
