@@ -227,7 +227,7 @@ header: 'Authorization: Bearer abc123'
 <strong>Expected Results</strong>
 
 <ul>
-    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns status code of <code>401</code> Unauthorized</li>
     <li>Returns message with <code>"Access token invalid or expired"</code></li>
 </ul>
 
@@ -248,7 +248,7 @@ header: 'Authorization: Bearer abc---123'
 <strong>Expected Results</strong>
 
 <ul>
-    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns status code of <code>401</code> Unauthorized</li>
     <li>Returns message with <code>"Access token invalid or expired"</code></li>
 </ul>
 
@@ -265,7 +265,7 @@ GET /animals
 <strong>Expected Results</strong>
 
 <ul>
-    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns status code of <code>401</code> Unauthorized</li>
     <li>Returns message with <code>"Access token invalid or expired"</code></li>
 </ul>
 
@@ -282,8 +282,189 @@ GET /animals
 <strong>Expected Results</strong>
 
 <ul>
-    <li>Returns status code of <code>401</code> unauthorized</li>
+    <li>Returns status code of <code>401</code> Unauthorized</li>
     <li>Returns message with <code>"Access token invalid or expired"</code></li>
+</ul>
+
+---
+
+### Invalid endpoint `/animal`
+
+<p><em>Attempts to make a request to an invalid endpoint</em></p>
+
+```http
+GET /animal
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>404</code></li>
+    <li>Returns status title <code>"Not Found"</code></li>
+    <li>Response detail contains <code>"No route found"</code></li>
+</ul>
+
+---
+
+### Invalid endpoint `/animals/types`
+
+<p><em>Attempts to make a request to an invalid endpoint</em></p>
+
+```http
+GET /animals/types
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>404</code></li>
+    <li>Returns status title <code>"Not Found"</code></li>
+    <li>Response detail contains <code>"No route found"</code></li>
+</ul>
+
+---
+
+### Get animal by ID, with ID as a string
+
+<p><em>Attempts to request animal by ID, where ID is a string</em></p>
+
+```http
+GET /animals/abcdefg
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>404</code></li>
+    <li>Returns status title <code>"Not Found"</code></li>
+    <li>Returns response detail <code>"Not Found"</code></li>
+</ul>
+
+---
+
+### Get animal by ID that does not exist
+
+<p><em>Attempts to request animal by ID, where ID does not exist</em></p>
+
+```http
+GET /animals/11111111
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>404</code></li>
+    <li>Returns status title <code>"Not Found"</code></li>
+    <li>Returns response detail <code>"Not Found"</code></li>
+</ul>
+
+---
+
+### Get animal by ID containing special characters
+
+<p><em>Attempts to request animal by ID, where ID contains special characters</em></p>
+
+```http
+GET /animals/65289840!
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>404</code></li>
+    <li>Returns status title <code>"Not Found"</code></li>
+    <li>Returns response detail <code>"Not Found"</code></li>
+</ul>
+
+<strong>Actual Results</strong>
+
+<ul>
+    <li>Returns status code of <code>200</code></li>
+    <li>Returns an animal with ID <code>65289840</code></li>
+</ul>
+
+---
+
+### Get animals by incomplete location parameter
+
+<p><em>Attempts to request animals by city without including the state parameter</em></p>
+
+```http
+GET /animals?location=denver
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>400</code> bad request</li>
+    <li>Returns response detail <code>"The request contains invalid parameters."</code></li>
+    <li>Returns error type <code>"ERR-00002"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the <code>"query"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the parameter named, <code>"location"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating a parameter error reason of <code>"Could not determine location."</code></li>
+</ul>
+
+---
+
+### Get animals by state parameter with special characters
+
+<p><em>Attempts to request animals by state with special characters</em></p>
+
+```http
+GET /animals?location=washington*
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>400</code> bad request</li>
+    <li>Returns response detail <code>"The request contains invalid parameters."</code></li>
+    <li>Returns error type <code>"ERR-00002"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the <code>"query"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the parameter named, <code>"location"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating a parameter error reason of <code>"Could not determine location."</code></li>
+</ul>
+
+---
+
+### Get animals by postal code parameter with special characters
+
+<p><em>Attempts to request animals by postal code with special characters</em></p>
+
+```http
+GET /animals?location=34787!
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>400</code> bad request</li>
+    <li>Returns response detail <code>"The request contains invalid parameters."</code></li>
+    <li>Returns error type <code>"ERR-00002"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the <code>"query"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the parameter named, <code>"location"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating a parameter error reason of <code>"Could not determine location."</code></li>
+</ul>
+
+---
+
+### Get animals by distance miles, with distance as a string
+
+<p><em>Attempts to request animals by distance from a location in miles, where distance is a string</em></p>
+
+```http
+GET /animals?location=34787&distance=twenty
+```
+
+<strong>Expected Results</strong>
+
+<ul>
+    <li>Returns status code of <code>400</code> bad request</li>
+    <li>Returns response detail <code>"The request contains invalid parameters."</code></li>
+    <li>Returns error type <code>"ERR-00002"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the <code>"query"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating an error in the parameter named, <code>"distance"</code></li>
+    <li>Response with <code>invalid-params</code> array indicating a parameter error reason of <code>"This value should be a valid number."</code></li>
 </ul>
 
 </details>
