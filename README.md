@@ -1,5 +1,3 @@
-**WIP**
-
 # RESTful API testing with CI using GitHub Actions
 
 A Postman collection created to test the [Petfinder.com](https://www.petfinder.com) RESTful API.
@@ -19,70 +17,6 @@ This project was created to practice using the Postman GUI for API testing and a
 - [Petfinder API Documentation](https://www.petfinder.com/developers/v2/docs/)
 - [Newman Runner](https://www.npmjs.com/package/newman)
 - [Newman Reporter](https://www.npmjs.com/package/newman-reporter-htmlextra)
-
-## Collection Structure
-
-<ul>
-    <li>Authentication
-    <ul>
-        <li>Get token</li>
-    </ul>
-</li>
-    <li>Happy paths
-    <ul>
-        <li>Get all animals
-        <ul>
-        <li>Get animals by location
-            <ul>
-            <li>City, state</li>
-            <li>Postal code</li>
-            </ul>
-        </li>
-        <li>Get animals by distance from location</li>
-        </ul>
-        </li>
-        <li>Get all animal types</li>
-        <li>Get animal by ID</li>
-    </ul>
-    </li>
-    <li>Sad paths
-        <ul>
-        <li>Invalid authorization
-            <ul>
-            <li>Invalid token passed to <code>/animals</code></li>
-            <li>Invalid token passed to <code>/types</code></li>
-            <li>Missing token</li>
-            <li>Incorrect authorization type</li>
-            </ul>
-        </li>
-        <li>Invalid endpoint
-            <ul>
-            <li>Invalid endpoint <code>/animal</code></li>
-            <li>Invalid endpoint <code>/animals/types</code></li>
-            </ul>
-        </li>
-        <li>Invalid parameters
-            <ul>
-            <li>Invalid IDs for get animal by ID
-            <ul>
-                <li>ID as a string</li>
-                <li>ID with no database match</li>
-                <li>ID with special characters</li>
-            </ul>
-            </li>
-            <li>Invalid query parameters for location and distance
-            <ul>
-                <li>Location by city with empty state</li>
-                <li>Location by state with special characters</li>
-                <li>Location by postal code with special characters</li>
-                <li>Distance parameter as a string</li>
-            </ul>
-            </li>
-            </ul>
-        </li>
-        </ul>
-    </li>
-</ul>
 
 ## Test Details
 
